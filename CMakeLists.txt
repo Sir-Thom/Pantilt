@@ -3,6 +3,7 @@ project(pantilt)
 
 set(CMAKE_CXX_STANDARD 14)
 
+# Include directories
 include_directories(src)
 include_directories(src/impl)
 include_directories(deps/WiringPi)
@@ -16,22 +17,20 @@ add_custom_target(build_wiringpi ALL
         COMMENT "Building WiringPi library"
 )
 
-#add_library(pantilt
-#        SHARED
-#        pantilt.cpp
-#        pantilt.h
-#        # Other source files
-#)
-#
-#
-## Specify include directories
-#target_include_directories(pantilt PUBLIC ${CMAKE_CURRENT_SOURCE_DIR})
-## Link against the WiringPi library
-#target_link_libraries(pantilt wiringPi)
-add_executable(pantilt
+# Define the library
+add_library(pantilt SHARED
         src/pantilt.cpp
         src/impl/pantilt.h
-        # Other source files
+        # Add other source files if any
 )
+
+# Specify include directories for the library
+target_include_directories(pantilt PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/src)
+target_include_directories(pantilt PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/src/impl)
+
 # Link against the WiringPi library
 target_link_libraries(pantilt wiringPi)
+
+# Optionally, you can install the library
+install(TARGETS pantilt LIBRARY DESTINATION lib)
+install(FILES src/impl/pantilt.h DESTINATION include)
